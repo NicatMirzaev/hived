@@ -6,8 +6,9 @@ import {
 } from 'apollo-server-core';
 import express from 'express';
 import http from 'http';
-import typeDefs from './schema/index';
-import resolvers from './resolvers/index';
+import typeDefs from './schema';
+import resolvers from './resolvers';
+import models from './models';
 
 async function startServer(typeDefs, resolvers) {
   const app = express();
@@ -23,8 +24,11 @@ async function startServer(typeDefs, resolvers) {
 
   await server.start();
   server.applyMiddleware({ app });
-  await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
-  console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  models.sequelize.sync({ force: true }).then(async () => {
+    console.log('Database connection is successful.');
+    await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+    console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
+  });
 }
 
 startServer(typeDefs, resolvers);
