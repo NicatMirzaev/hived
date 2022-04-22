@@ -1,18 +1,19 @@
 {
-  "name": "backend",
+  "name": "hived-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon --exec ./node_modules/.bin/babel-node src/index.js",
-    "prod": "cross-env NODE_ENV=production nodemon --exec ./node_modules/.bin/babel-node src/index.js"
+    "dev": "cross-env NODE_ENV=development nodemon --exec node_modules/.bin/babel-node src/index.js",
+    "prod": "cross-env NODE_ENV=production node_modules/.bin/babel-node index.js"
   },
   "author": "Nicat",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
-    "babel-cli": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-3": "^6.24.1",
+    "@babel/cli": "^7.17.6",
+    "@babel/core": "^7.17.9",
+    "@babel/node": "^7.16.8",
+    "@babel/preset-env": "^7.16.11",
     "cross-env": "^7.0.3",
     "eslint": "^8.12.0",
     "eslint-config-airbnb-base": "^15.0.0",
