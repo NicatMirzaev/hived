@@ -1,4 +1,4 @@
-import Sequelize from 'sequelize';
+import { Sequelize, DataTypes } from 'sequelize';
 import config from '../lib/config';
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -7,10 +7,10 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
 });
 
 const models = {
-  user: require('./user')(sequelize, Sequelize.DataTypes),
+  User: require('./user')(sequelize, DataTypes),
 };
 
-models.sequelize = sequelize;
-models.Sequelize = Sequelize;
+(models as any).sequelize = sequelize;
+(models as any).Sequelize = Sequelize;
 
 export default models;

@@ -4,18 +4,19 @@ import {
   ApolloServerPluginLandingPageDisabled,
   ApolloServerPluginDrainHttpServer,
 } from 'apollo-server-core';
+import { application } from './modules';
 import express from 'express';
 import http from 'http';
-import typeDefs from './schema';
-import resolvers from './resolvers';
 import models from './models';
 
-async function startServer(typeDefs, resolvers) {
+async function startServer() {
   const app = express();
   const httpServer = http.createServer(app);
+  const executor = application.createApolloExecutor();
+  const schema = application.schema;
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
+    executor,
     plugins: [
       process.env.NODE_ENV === 'development' ? ApolloServerPluginLandingPageGraphQLPlayground() : ApolloServerPluginLandingPageDisabled(),
       ApolloServerPluginDrainHttpServer({ httpServer }),
@@ -24,11 +25,11 @@ async function startServer(typeDefs, resolvers) {
 
   await server.start();
   server.applyMiddleware({ app });
-  models.sequelize.sync({ force: true }).then(async () => {
+  (models as any).sequelize.sync({ force: true }).then(async () => {
     console.log('Database connection is successful.');
-    await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+    await new Promise<void>((resolve) => httpServer.listen({ port: 4000 }, resolve));
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`);
   });
 }
 
-startServer(typeDefs, resolvers);
+startServer();
