@@ -1,4 +1,5 @@
 import { Sequelize, DataTypes } from 'sequelize';
+import { Models } from '../types';
 import config from '../lib/config';
 
 const sequelize = new Sequelize(config.database, config.username, config.password, {
@@ -6,11 +7,9 @@ const sequelize = new Sequelize(config.database, config.username, config.passwor
   dialect: 'postgres',
 });
 
-const models = {
+const models: Models = {
   User: require('./user')(sequelize, DataTypes),
+  sequelize,
 };
-
-(models as any).sequelize = sequelize;
-(models as any).Sequelize = Sequelize;
 
 export default models;
